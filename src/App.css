@@ -7,6 +7,18 @@ body {
   margin: auto;
 }
 
+input {
+  background-color: #e0e0e0;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  text-align: center;
+  width: 15ch;
+}
+
+.bracket {
+  width: 2ch;
+}
+
 header {
   margin-bottom: 1.5rem;
 }
