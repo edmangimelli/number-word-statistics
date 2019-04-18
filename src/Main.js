@@ -11,21 +11,23 @@ class Main extends Component {
 
       this.state = {
           value: props.value,
-          min: '',
-          max: '',
-          includeMin: false,
-          includeMax: false,
+          left: '',
+          right: '',
+          includeLeft: false,
+          includeRight: false,
       };
   }
 
   inclusiveMinMax = () => {
     // return [min, max, OK]
+    const {left, right, includeLeft, includeRight} = this.state;
 
-    let {min, max} = this.state;
-    if (!isNumber(min) || !isNumber(max)) return [null, null, null];
-    if (min > max) [min, max] = [max, min];
-    
-    const {includeMin, includeMax} = this.state;
+    if (!isNumber(left) || !isNumber(right)) return [null, null, null];
+
+    const [min, max, includeMin, includeMax] = left <= right ?
+      [left, right, includeLeft, includeRight] :
+      [right, left, includeRight, includeLeft];
+    console.log(min, max, includeMin, includeMax);
 
     return [
       min + (includeMin ? 0 : 1),
@@ -44,19 +46,20 @@ class Main extends Component {
   render() {
 
     const [LeftBracket, RightBracket] = [
-      ['[', '(', 'includeMin'],
-      [']', ')', 'includeMax'],
-    ].map(([includeStr, excludeStr, key]) =>
-      <Bracket {...{
+      ['[', '(', 'Left'],
+      [']', ')', 'Right'],
+    ].map(([includeStr, excludeStr, side]) => {
+      const key = `include${side}`;
+      return <Bracket {...{
         includeStr,
         excludeStr,
         set: x => this.setState({[key]: x}),
         get: () => this.state[key],
-      }} />
-    )
+      }} />;
+    })
 
-    const [MinInput, MaxInput] = ['min', 'max'].map(k =>
-      <NumberInput set={v => this.setState({[k]: v})} />
+    const [LeftInput, RightInput] = ['left', 'right'].map(k =>
+      <NumberInput set={v => this.setState({[k]: v})} name={k} />
     );
 
     const [min, max, hasMinAndMax] = this.exclusiveMinMax();
@@ -65,7 +68,7 @@ class Main extends Component {
 
     return (
       <div>
-        <div>{LeftBracket} {MinInput}, {MaxInput} {RightBracket}</div>
+        <div>{LeftBracket} {LeftInput}, {RightInput} {RightBracket}</div>
         {hasMinAndMax && <div>between {min} and {max}</div>}
       </div>
     );
