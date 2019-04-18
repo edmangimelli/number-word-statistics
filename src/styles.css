@@ -15,6 +15,17 @@ input {
   width: 15ch;
 }
 
+button {
+  background:none!important;
+  border:none; 
+  padding:0!important;
+  font: inherit;
+  color: #4b0082;
+  text-decoration: none;
+  outline: 0;
+  cursor: pointer;
+}
+
 div {
   text-align: center;
 }

@@ -3,7 +3,11 @@ import './Main.css';
 import Bracket from './components/Bracket';
 import NumberInput from './components/NumberInput';
 import {isNumber} from './helpers';
+import Settings from './Settings';
+import Log from './Log';
+import LINK from './components/Link';
 
+const destinations = {Settings, Log};
 
 class Main extends Component {
   constructor(props) {
@@ -44,6 +48,7 @@ class Main extends Component {
   }
 
   render() {
+    const {switcher} = this.props;
 
     const [LeftBracket, RightBracket] = [
       ['[', '(', 'Left'],
@@ -66,8 +71,11 @@ class Main extends Component {
 
     console.log('state', this.state);
 
+    const Link = ({children}) => LINK({destinations, switcher, children});
+
     return (
       <div>
+        <Link>Settings</Link>
         <div>{LeftBracket} {LeftInput}, {RightInput} {RightBracket}</div>
         {hasMinAndMax && <div>between {min} and {max}</div>}
       </div>

@@ -9,7 +9,13 @@ class App extends Component {
       };
   }
 
-  currentPage = () => new Map([[Main, <Main />]]).get(this.state.page);
+  currentPage = () => {
+    const universalProps = {
+      switcher: page => this.setState({page}),
+    }
+
+    return React.createElement(this.state.page, universalProps, null);
+  }
 
   render() {
     return <div>{this.currentPage()}</div>;
