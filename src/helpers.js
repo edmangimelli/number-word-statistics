@@ -13,3 +13,6 @@ export const stringToNumber = str => {
   const number = Number(numberString);
   return [number, isNumber(number)];
 }
+
+export const capitalize = string =>
+  string.charAt(0).toUpperCase() + string.slice(1);

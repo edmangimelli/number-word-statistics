@@ -15,8 +15,16 @@ input {
   width: 15ch;
 }
 
+div {
+  text-align: center;
+}
+
 .bracket {
   width: 2ch;
+}
+
+.invalid {
+  border: 1px solid red;
 }
 
 header {

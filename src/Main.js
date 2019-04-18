@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './Main.css';
 import Bracket from './components/Bracket';
+import NumberInput from './components/NumberInput';
+import {isNumber} from './helpers';
 
-const WAIT_INTERVAL = 1000;
-const ENTER_KEY = 13;
 
 class Main extends Component {
   constructor(props) {
@@ -11,35 +11,35 @@ class Main extends Component {
 
       this.state = {
           value: props.value,
+          min: '',
+          max: '',
           includeMin: false,
           includeMax: false,
       };
   }
 
-  componentWillMount() {
-      this.timer = null;
+  inclusiveMinMax = () => {
+    // return [min, max, OK]
+
+    let {min, max} = this.state;
+    if (!isNumber(min) || !isNumber(max)) return [null, null, null];
+    if (min > max) [min, max] = [max, min];
+    
+    const {includeMin, includeMax} = this.state;
+
+    return [
+      min + (includeMin ? 0 : 1),
+      max - (includeMax ? 0 : 1),
+      true
+    ]
   }
 
-  handleChange = (value) => {
-      clearTimeout(this.timer);
-
-      this.setState({ value });
-
-      this.timer = setTimeout(this.triggerChange, WAIT_INTERVAL);
+  exclusiveMinMax = () => {
+    const inclusiveAnswer = this.inclusiveMinMax();
+    const [min, max, OK] = inclusiveAnswer;
+    if (!OK) return inclusiveAnswer;
+    return [min - 1, max + 1, OK];
   }
-
-  handleKeyDown = (e) => {
-      if (e.keyCode === ENTER_KEY) {
-          this.triggerChange();
-      }
-  }
-
-  triggerChange = () => {
-      const { value } = this.state;
-
-      this.props.onChange(value);
-  }
-
 
   render() {
 
@@ -55,11 +55,18 @@ class Main extends Component {
       }} />
     )
 
+    const [MinInput, MaxInput] = ['min', 'max'].map(k =>
+      <NumberInput set={v => this.setState({[k]: v})} />
+    );
+
+    const [min, max, hasMinAndMax] = this.exclusiveMinMax();
+
     console.log('state', this.state);
 
     return (
       <div>
-        {LeftBracket} <input />, <input /> {RightBracket}
+        <div>{LeftBracket} {MinInput}, {MaxInput} {RightBracket}</div>
+        {hasMinAndMax && <div>between {min} and {max}</div>}
       </div>
     );
   }
