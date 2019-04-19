@@ -1,6 +1,6 @@
 import { remove, stringToNumber, numberOfDigitsBeforeCursor } from "./helpers";
 
-describe("test stringToNumber`", () => {
+describe("test stringToNumber", () => {
   it.each`
     input            | output
     ${"0"}           | ${0}
@@ -17,7 +17,7 @@ describe("test stringToNumber`", () => {
   });
 });
 
-describe("test remove`", () => {
+describe("test remove", () => {
   it.each`
     x       | from          | output
     ${"0"}  | ${"10000000"} | ${"1"}
