@@ -14,8 +14,40 @@ class App extends Component {
       includeLeft = false,
       includeRight = false,
       rulesExpanded = false,
-      rules = {
-      },
+      rules = Object.entries({
+        1: "one",
+        2: "two",
+        3: "three",
+        4: "four",
+        5: "five",
+        6: "six",
+        7: "seven",
+        8: "eight",
+        9: "nine",
+        10: "ten",
+        11: "eleven",
+        12: "twelve",
+        13: "thirteen",
+        14: "fourteen",
+        15: "fifteen",
+        16: "sixteen",
+        17: "seventeen",
+        18: "eighteen",
+        19: "nineteen",
+        20: "twenty",
+        30: "thirty",
+        40: "forty",
+        50: "fifty",
+        60: "sixty",
+        70: "seventy",
+        80: "eighty",
+        90: "ninety",
+        100: { word: "hundred", multiplier: true },
+        1000: { word: "thousand", multiplier: true },
+        1000000: { word: "million", multiplier: true },
+        1000000000: { word: "billion", multiplier: true },
+        1000000000000: { word: "trillion", multiplier: true },
+      }).map(([k, v]) => ({ value: k, ...(isString(v) ? { word: v } : v) })),
     } = props;
 
     this.state = {
@@ -48,19 +80,21 @@ class App extends Component {
     return [min - 1, max + 1, OK];
   };
 
-  rules = () => <div>{
-    this.state.settingsExpanded ? (
-      <Rules
-        set={rules => this.setState({ rules })}
-        get={this.state.rules}
-        collapse={() => this.setState({ rulesExpanded: false })}
-      />
-    ) : (
-      <button onClick={() => this.setState({ rulesExpanded: true })}>
-        Rules
-      </button>
-    )
-  }</div>;
+  rules = () => (
+    <div>
+      {this.state.settingsExpanded ? (
+        <Rules
+          set={rules => this.setState({ rules })}
+          get={this.state.rules}
+          collapse={() => this.setState({ rulesExpanded: false })}
+        />
+      ) : (
+        <button onClick={() => this.setState({ rulesExpanded: true })}>
+          Rules
+        </button>
+      )}
+    </div>
+  );
 
   range = () => {
     const [LeftBracket, RightBracket] = [
@@ -94,8 +128,12 @@ class App extends Component {
   rangeDescription = () => {
     const [min, max, OK] = this.exclusiveMinMax();
     if (!OK) return null;
-    return <div>between {min} and {max}</div>;
-  }
+    return (
+      <div>
+        between {min} and {max}
+      </div>
+    );
+  };
 
   render() {
     const { rules, range, rangeDescription } = this;

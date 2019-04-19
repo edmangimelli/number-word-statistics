@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Main.css';
 import Bracket from './components/Bracket';
 import NumberInput from './components/NumberInput';
-import {isNumber} from './helpers';
+import {isNumber, isString} from './helpers';
 import Settings from './Settings';
 import Log from './Log';
 import LINK from './components/Link';
