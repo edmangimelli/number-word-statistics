@@ -85,10 +85,10 @@ class App extends Component {
 
   rules = () => (
     <div>
-      {this.state.settingsExpanded ? (
+      {this.state.rulesExpanded ? (
         <Rules
           set={rules => this.setState({ rules })}
-          get={this.state.rules}
+          rules={this.state.rules}
           collapse={() => this.setState({ rulesExpanded: false })}
         />
       ) : (
@@ -140,7 +140,7 @@ class App extends Component {
 
   render() {
     const { rules, range, rangeDescription } = this;
-    //console.log('state', this.state);
+    console.log('state', this.state);
     return (
       <div>
         {rules()}

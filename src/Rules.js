@@ -3,8 +3,7 @@ import NumberInput from './components/NumberInput';
 import Input from './components/Input';
 import Checkbox from './components/Checkbox';
 
-const createSetter = (get, set, i) => obj => {
-  const rules = get();
+const createSetter = (rules, set, i) => obj => {
   set([
     ...rules.slice(0, i),
     {...rules[i], ...obj},
@@ -12,15 +11,15 @@ const createSetter = (get, set, i) => obj => {
   ]);
 }
 
-const Rules = ({set: setRules, get, collapse}) => (
+const Rules = ({set: setRules, rules, collapse}) => (
   <table>{
-    get().map(({value, word, multiplier}, i) => {
-      const set = createSetter(get, setRules, i);
+    rules.map(({value, word, multiplier}, i) => {
+      const set = createSetter(rules, setRules, i);
       return (
         <tr>{
           [
-            <NumberInput set={value => set({value})} name={i} />,
-            <Input onChange={word => set({word})} />,
+            <NumberInput set={value => set({value})} name={i} value={value} />,
+            <Input onChange={word => set({word})} value={word} />,
             <Checkbox for={{multiplier}} set={set} />,
           ].map(element => <td>{element}</td>)
         }</tr>
