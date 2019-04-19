@@ -1,6 +1,7 @@
 import React from 'react';
-import Input form './components/Input';
-import Checkbox form './components/Checkbox';
+import NumberInput from './components/NumberInput';
+import Input from './components/Input';
+import Checkbox from './components/Checkbox';
 
 const createSetter = (get, set, i) => obj => {
   const rules = get();
@@ -20,11 +21,12 @@ const Rules = ({set: setRules, get, collapse}) => (
           [
             <NumberInput set={value => set({value})} name={i} />,
             <Input onChange={word => set({word})} />,
-            <Checkbox for={{multipier}} set={set} />
-          ].map(element => <td>{element}</td>);
+            <Checkbox for={{multiplier}} set={set} />,
+          ].map(element => <td>{element}</td>)
         }</tr>
       );
    })
  }</table>
 );
 
+export default Rules;

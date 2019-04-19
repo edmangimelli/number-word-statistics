@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import "./Main.css";
+import Rules from './Rules';
 import Bracket from "./components/Bracket";
 import NumberInput from "./components/NumberInput";
-import { isNumber } from "./helpers";
+import { isNumber, isString } from "./helpers";
 
 class App extends Component {
   constructor(props) {
@@ -55,6 +56,8 @@ class App extends Component {
       right,
       includeLeft,
       includeRight,
+      rulesExpanded,
+      rules,
     };
   }
 
