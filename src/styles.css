@@ -30,12 +30,32 @@ div {
   text-align: center;
 }
 
+.wordWrap { 
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
+}
+
 .bracket {
   width: 2ch;
 }
 
 .invalid {
   border: 1px solid red;
+}
+
+.rules {
+  text-align: left;
+}
+
+.note {
+  color: #404040;
+  font-size: 80%;
+  font-style: italic;
+}
+
+.center {
+  text-align: center;
 }
 
 header {

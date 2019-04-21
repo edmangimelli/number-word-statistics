@@ -3,11 +3,11 @@ import { stringToNumber, numberToString, restoreCursor } from "../helpers";
 
 const enter = 13;
 
-class NumberInput extends Component {
+class ControlledNumberInput extends Component {
   constructor(props) {
     super(props);
 
-    const [string] = numberToString(props.initialValue);
+    const [string] = numberToString(props.value);
     this.state = {
       string,
       valid: true,
@@ -23,7 +23,7 @@ class NumberInput extends Component {
   onChange = ({ target }) => {
     const string = target.value;
     clearTimeout(this.timer);
-    this.setState({ string });
+    this.setState({ string, previousPropsValue: this.props.value });
     this.timer = setTimeout(
       this.validateInputReturnValueToParentFormatInput,
       900
@@ -46,9 +46,10 @@ class NumberInput extends Component {
     set(number);
     // format input
     const [newString] = numberToString(number);
-    const element = this.ref.current;
-    const originalCursorPosition = element.selectionStart;
     this.setState({ string: newString });
+    const element = this.ref.current;
+    if (!element) return;
+    const originalCursorPosition = element.selectionStart;
     restoreCursor({
       element,
       originalCursorPosition,
@@ -58,15 +59,21 @@ class NumberInput extends Component {
   };
 
   render() {
-    const { string: value, valid } = this.state;
+    const { value } = this.props;
+    const { string: previousString, valid, previousPropsValue } = this.state;
     const { onChange, onKeyDown, ref } = this;
     const className = valid ? null : "invalid";
+
+    const [string] = numberToString(value);
+    if (string !== previousString && value !== previousPropsValue) {
+      this.setState({ string, previousPropsValue: value });
+    }
 
     return (
       <input
         {...{
           ref,
-          value,
+          value: previousString,
           onChange,
           onKeyDown,
           ...(className && { className }),
@@ -76,4 +83,4 @@ class NumberInput extends Component {
   }
 }
 
-export default NumberInput;
+export default ControlledNumberInput;

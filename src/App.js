@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import "./Main.css";
-import Rules from './Rules';
+import Rules from "./components/Rules";
 import Bracket from "./components/Bracket";
 import NumberInput from "./components/NumberInput";
-import { isNumber, isString } from "./helpers";
+import Calculations from "./components/Calculations";
+import { isNumber, numberToString, numberToWord } from "./helpers";
+import predefinedRules from "./rules";
 
 class App extends Component {
   constructor(props) {
@@ -14,41 +16,8 @@ class App extends Component {
       right = "",
       includeLeft = false,
       includeRight = false,
-      rulesExpanded = false,
-      rules = Object.entries({
-        1: "one",
-        2: "two",
-        3: "three",
-        4: "four",
-        5: "five",
-        6: "six",
-        7: "seven",
-        8: "eight",
-        9: "nine",
-        10: "ten",
-        11: "eleven",
-        12: "twelve",
-        13: "thirteen",
-        14: "fourteen",
-        15: "fifteen",
-        16: "sixteen",
-        17: "seventeen",
-        18: "eighteen",
-        19: "nineteen",
-        20: "twenty",
-        30: "thirty",
-        40: "forty",
-        50: "fifty",
-        60: "sixty",
-        70: "seventy",
-        80: "eighty",
-        90: "ninety",
-        100: { word: "hundred", multiplier: true },
-        1000: { word: "thousand", multiplier: true },
-        1000000: { word: "million", multiplier: true },
-        1000000000: { word: "billion", multiplier: true },
-        1000000000000: { word: "trillion", multiplier: true },
-      }).map(([k, v]) => ({ value: k, ...(isString(v) ? { word: v } : v) })),
+      showRules = null,
+      rules = predefinedRules["short scale (US)"],
     } = props;
 
     this.state = {
@@ -56,7 +25,7 @@ class App extends Component {
       right,
       includeLeft,
       includeRight,
-      rulesExpanded,
+      showRules,
       rules,
     };
   }
@@ -71,7 +40,6 @@ class App extends Component {
       left <= right
         ? [left, right, includeLeft, includeRight]
         : [right, left, includeRight, includeLeft];
-    console.log(min, max, includeMin, includeMax);
 
     return [min + (includeMin ? 0 : 1), max - (includeMax ? 0 : 1), true];
   };
@@ -83,21 +51,21 @@ class App extends Component {
     return [min - 1, max + 1, OK];
   };
 
-  rules = () => (
-    <div>
-      {this.state.rulesExpanded ? (
-        <Rules
-          set={rules => this.setState({ rules })}
-          rules={this.state.rules}
-          collapse={() => this.setState({ rulesExpanded: false })}
-        />
-      ) : (
-        <button onClick={() => this.setState({ rulesExpanded: true })}>
-          Rules
-        </button>
-      )}
-    </div>
-  );
+  rules = () => {
+    const { rules, showRules } = this.state;
+    return (
+      <Rules
+        set={rules => this.setState({ rules })}
+        setAndResetTable={rules => this.setState(
+          { rules, showRules: false },
+          () => this.setState({showRules: true})
+        )}
+        rules={rules}
+        show={showRules}
+        toggle={() => this.setState({ showRules: !showRules || null })}
+      />
+    );
+  };
 
   range = () => {
     const [LeftBracket, RightBracket] = [
@@ -131,21 +99,26 @@ class App extends Component {
   rangeDescription = () => {
     const [min, max, OK] = this.exclusiveMinMax();
     if (!OK) return null;
+    const format = n => n.toLocaleString();
+    const [formattedMin, formattedMax] = [min, max].map(format);
     return (
       <div>
-        between {min} and {max}
+        between {formattedMin} and {formattedMax}
       </div>
     );
   };
 
   render() {
-    const { rules, range, rangeDescription } = this;
-    console.log('state', this.state);
+    const { range, rangeDescription } = this;
+    const {rules} = this.state;
+    console.log("state", this.state);
+    const [min, max, OK] = this.inclusiveMinMax();
     return (
       <div>
-        {rules()}
+        {this.rules()}
         {range()}
         {rangeDescription()}
+        {OK && <Calculations {...{min, max, rules}} />}
       </div>
     );
   }
