@@ -37,7 +37,7 @@ class ControlledNumberInput extends Component {
 
   validateInputReturnValueToParentFormatInput = () => {
     // validate input
-    const { set, name } = this.props;
+    const { set } = this.props;
     const { string } = this.state;
     const [number, OK] = stringToNumber(string);
     this.setState({ valid: OK });

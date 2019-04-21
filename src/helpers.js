@@ -104,13 +104,13 @@ export const numberToWord = (number, rules) => {
   if (isMultiplier(b, multipliers)) {
     const quotient = Math.floor(number / b);
     const difference = number - b * quotient;
-    const firstHalf = `${numberToWord(quotient, rules)} ${words[b]}`;
+    const firstHalf = [...numberToWord(quotient, rules), words[b]];
     if (difference === 0) return firstHalf;
-    return `${firstHalf} ${numberToWord(number - b * quotient, rules)}`;
+    return [...firstHalf, ...numberToWord(number - b * quotient, rules)];
   }
   const difference = number - b;
-  if (difference === 0) return words[b];
-  return `${words[b]} ${numberToWord(difference, rules)}`;
+  if (difference === 0) return [words[b]];
+  return [words[b], ...numberToWord(difference, rules)];
 };
 
 const biggestValueLessThanOriginalNumber = (number, values) =>

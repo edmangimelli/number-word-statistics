@@ -1,5 +1,4 @@
 import React from "react";
-import NumberInput from "./NumberInput";
 import ControlledNumberInput from "./ControlledNumberInput";
 import Input from "./Input";
 import Checkbox from "./Checkbox";

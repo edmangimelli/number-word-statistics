@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import "./Main.css";
 import Rules from "./components/Rules";
 import Bracket from "./components/Bracket";
 import NumberInput from "./components/NumberInput";
 import Calculations from "./components/Calculations";
-import { isNumber, numberToString, numberToWord } from "./helpers";
+import SetDelimiters from "./components/SetDelimiters";
+import { isNumber } from "./helpers";
 import predefinedRules from "./rules";
 
 class App extends Component {
@@ -18,6 +19,8 @@ class App extends Component {
       includeRight = false,
       showRules = null,
       rules = predefinedRules["short scale (US)"],
+      innerDelimiter = "",
+      outerDelimiter = "",
     } = props;
 
     this.state = {
@@ -27,6 +30,8 @@ class App extends Component {
       includeRight,
       showRules,
       rules,
+      innerDelimiter,
+      outerDelimiter,
     };
   }
 
@@ -56,10 +61,11 @@ class App extends Component {
     return (
       <Rules
         set={rules => this.setState({ rules })}
-        setAndResetTable={rules => this.setState(
-          { rules, showRules: false },
-          () => this.setState({showRules: true})
-        )}
+        setAndResetTable={rules =>
+          this.setState({ rules, showRules: false }, () =>
+            this.setState({ showRules: true })
+          )
+        }
         rules={rules}
         show={showRules}
         toggle={() => this.setState({ showRules: !showRules || null })}
@@ -108,17 +114,44 @@ class App extends Component {
     );
   };
 
-  render() {
-    const { range, rangeDescription } = this;
-    const {rules} = this.state;
-    console.log("state", this.state);
+  setDelimiters = () => {
+    const { innerDelimiter: inner, outerDelimiter: outer, rules } = this.state;
+    return (
+      <SetDelimiters
+        {...{
+          inner,
+          outer,
+          setInner: innerDelimiter => this.setState({ innerDelimiter }),
+          setOuter: outerDelimiter => this.setState({ outerDelimiter }),
+          rules,
+        }}
+      />
+    );
+  };
+
+  calculations = () => {
+    const { rules } = this.state;
     const [min, max, OK] = this.inclusiveMinMax();
+    if (!OK) return null;
+    return <Calculations {...{ min, max, rules }} />;
+  };
+
+  render() {
+    console.log("state", this.state);
+    const {
+      rules,
+      range,
+      rangeDescription,
+      setDelimiters,
+      calculations,
+    } = this;
     return (
       <div>
-        {this.rules()}
+        {rules()}
         {range()}
         {rangeDescription()}
-        {OK && <Calculations {...{min, max, rules}} />}
+        {setDelimiters()}
+        {calculations()}
       </div>
     );
   }
