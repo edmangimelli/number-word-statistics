@@ -23,7 +23,17 @@ class ControlledNumberInput extends Component {
   onChange = ({ target }) => {
     const string = target.value;
     clearTimeout(this.timer);
-    this.setState({ string, previousPropsValue: this.props.value });
+    const element = this.ref.current;
+    const originalCursorPosition = element.selectionStart;
+    this.setState(
+      { string, previousPropsValue: this.props.value },
+      () => {
+
+    window.requestAnimationFrame(() => {
+      element.selectionStart = element.selectionEnd = originalCursorPosition;
+    });
+      });
+
     this.timer = setTimeout(
       this.validateInputReturnValueToParentFormatInput,
       900
@@ -36,6 +46,8 @@ class ControlledNumberInput extends Component {
   };
 
   validateInputReturnValueToParentFormatInput = () => {
+    const element = this.ref.current;
+    const originalCursorPosition = element && element.selectionStart;
     // validate input
     const { set } = this.props;
     const { string } = this.state;
@@ -47,9 +59,7 @@ class ControlledNumberInput extends Component {
     // format input
     const [newString] = numberToString(number);
     this.setState({ string: newString });
-    const element = this.ref.current;
     if (!element) return;
-    const originalCursorPosition = element.selectionStart;
     restoreCursor({
       element,
       originalCursorPosition,

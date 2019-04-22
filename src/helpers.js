@@ -32,14 +32,26 @@ export const remove = (x, from) => {
   return from.replace(x, "");
 };
 
-export const numberOfDigitsBeforeCursor = (string, cursorPosition) =>
-  String(string).slice(0, cursorPosition).match(/\d/g).length;
+export const numberOfDigitsBeforeCursor = (string, cursorPosition) => {
+  const matches = String(string)
+    .slice(0, cursorPosition)
+    .match(/\d/g);
+  if (!matches) return 0;
+  return matches.length;
+};
 
 export const positionOfCursorIfItWasAfterXNumberOfDigits = (
   string,
   numberOfDigits
 ) => {
   const len = string.length;
+
+  if (numberOfDigits === 0) {
+    // put cursor in front of first digit
+    for (let i = 0; i < len; i++) if (string[i].match(/\d/)) return i;
+    return len;
+  }
+
   for (let i = 0, digitsSeen = 0; i < len; i++) {
     if (string[i].match(/\D/)) continue;
     if (++digitsSeen === numberOfDigits) return i + 1;
