@@ -33,7 +33,7 @@ export const remove = (x, from) => {
 };
 
 export const numberOfDigitsBeforeCursor = (string, cursorPosition) =>
-  string.slice(0, cursorPosition).match(/\d/g).length;
+  String(string).slice(0, cursorPosition).match(/\d/g).length;
 
 export const positionOfCursorIfItWasAfterXNumberOfDigits = (
   string,
