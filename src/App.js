@@ -23,6 +23,7 @@ class App extends Component {
       ],
       innerDelimiter = "",
       outerDelimiter = "",
+      soughtString = "e",
     } = props;
 
     this.state = {
@@ -35,6 +36,7 @@ class App extends Component {
       rules,
       innerDelimiter,
       outerDelimiter,
+      soughtString,
     };
   }
 
@@ -151,7 +153,7 @@ class App extends Component {
   };
 
   calculations = ({ warnings, errors }) => {
-    const { rules, innerDelimiter, outerDelimiter } = this.state;
+    const { rules, innerDelimiter, outerDelimiter, soughtString } = this.state;
     const [min, max, OK] = this.inclusiveMinMax();
     if (!OK) return null;
     return (
@@ -164,6 +166,8 @@ class App extends Component {
           outerDelimiter,
           warnings,
           errors,
+          soughtString,
+          setSoughtString: soughtString => this.setState({ soughtString }),
         }}
       />
     );

@@ -19,7 +19,19 @@ input {
   width: 5ch;
 }
 
+.soughtStringInput {
+  width: 5ch;
+}
+
 .delimiter {
+  text-align: left;
+}
+
+.answer {
+  font-weight: bold;
+}
+
+.calculation {
   text-align: left;
 }
 

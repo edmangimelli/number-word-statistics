@@ -48,7 +48,7 @@ class Rules extends Component {
     const [value, OK] = stringToNumber(valueString);
     if (!OK) return;
     set([...rules, { word, value, multiplier }]);
-    this.setState({valueString: null}, () => this.setState(defaultState));
+    this.setState({ valueString: null }, () => this.setState(defaultState));
   };
 
   render() {
@@ -78,8 +78,8 @@ class Rules extends Component {
     });
 
     return (
-      <div >
-        <div style={{textAlign: 'right'}}>
+      <div>
+        <div style={{ textAlign: "right" }}>
           Rules{" "}
           <button onClick={toggle} style={{ fontSize: "80%" }}>
             ({show ? "collapse" : "expand"})
@@ -89,7 +89,7 @@ class Rules extends Component {
           </button>
         </div>
         {show && (
-          <div className="rules"style={{ marginBottom: "20px" }}>
+          <div className="rules" style={{ marginBottom: "20px" }}>
             <div style={{ marginBottom: "20px" }}>
               <PredefinedRulesPicker
                 {...{ setAndResetTable, className: "rules" }}

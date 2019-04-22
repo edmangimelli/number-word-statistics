@@ -5,7 +5,9 @@ const PredefinedRulesList = ({ setAndResetTable, className }) => (
   <div className={className}>
     predefined rule sets:
     {Object.entries(rules).map(([nameOfRuleSet, rules]) => (
-      <div className={className} ><button onClick={() => setAndResetTable(rules)}>{nameOfRuleSet}</button></div>
+      <div className={className}>
+        <button onClick={() => setAndResetTable(rules)}>{nameOfRuleSet}</button>
+      </div>
     ))}
   </div>
 );

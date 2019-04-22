@@ -7,7 +7,7 @@ export const isString = x => typeof x === "string";
 
 export const stringToNumber = str => {
   // return [number, OK]
-  const regex = /^(0|(\+|-)?[1-9]\d*)((e|E)\+?(0|[1-9]\d*))?$/;
+  const regex = /^(0|[1-9]\d*)((e|E)\+?(0|[1-9]\d*))?$/;
   const commasAndWhitespaceRemoved = String(str).replace(/[\s,]/g, "");
   const matches = commasAndWhitespaceRemoved.match(regex);
   if (!matches) return [null, false];
@@ -202,3 +202,24 @@ const repeats = array => {
 
   return array.every(a => isNumber(a)) ? result.map(r => Number(r)) : result;
 };
+
+export const occurrencesOfSubstringArrayInStringArray = ({
+  sub,
+  str,
+  subLength,
+  strLength,
+}) => {
+  const stoppingPoint = strLength - subLength + 1;
+
+  let occurrences = 0;
+  for (let i = 0; i < stoppingPoint; i++) {
+    const current = str.slice(i, i + subLength);
+    if (arraysAreEqual(current, sub)) occurrences++;
+  }
+  return occurrences;
+};
+
+export const randomIndexer = ceiling => () =>
+  Math.floor(Math.random() * ceiling);
+
+export const arraysAreEqual = (A, B) => A.every((a, i) => a === B[i]);

@@ -1,10 +1,8 @@
-import React from 'react';
+import React from "react";
 
-const Link = ({destinations, switcher, children, to}) => (
+const Link = ({ destinations, switcher, children, to }) => (
   <div>
-    <button
-      onClick={()=>switcher(to || destinations[children])}
-    >
+    <button onClick={() => switcher(to || destinations[children])}>
       {children}
     </button>
   </div>
