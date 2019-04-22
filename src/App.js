@@ -174,7 +174,6 @@ class App extends Component {
   };
 
   render() {
-    console.log("state", this.state);
     const {
       rules,
       range,
