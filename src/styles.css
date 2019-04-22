@@ -15,10 +15,18 @@ input {
   width: 15ch;
 }
 
+.delimiterInput {
+  width: 5ch;
+}
+
+.delimiter {
+  text-align: left;
+}
+
 button {
-  background:none!important;
-  border:none; 
-  padding:0!important;
+  background: none !important;
+  border: none;
+  padding: 0 !important;
   font: inherit;
   color: #4b0082;
   text-decoration: none;
@@ -30,7 +38,11 @@ div {
   text-align: center;
 }
 
-.wordWrap { 
+tr {
+  witdh: 111px;
+}
+
+.wordWrap {
   white-space: pre-wrap;
   word-wrap: break-word;
   font-family: monospace;
@@ -42,6 +54,24 @@ div {
 
 .invalid {
   border: 1px solid red;
+}
+
+.error {
+  color: red;
+  text-align: left;
+  font-size: 80%;
+  font-style: italic;
+}
+
+.errorColor {
+  color: red;
+}
+
+.warning {
+  color: orange;
+  text-align: left;
+  font-size: 80%;
+  font-style: italic;
 }
 
 .rules {
@@ -63,7 +93,7 @@ header {
 }
 
 h1 {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 hr {
@@ -89,4 +119,3 @@ a:hover {
 ::selection {
   background-color: #fff888;
 }
-

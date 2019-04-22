@@ -1,8 +1,8 @@
 import React from "react";
-import rules from "../rules";
+import rules from "../predefinedRules";
 
 const PredefinedRulesList = ({ setAndResetTable, className }) => (
-  <div className={className} >
+  <div className={className}>
     predefined rule sets:
     {Object.entries(rules).map(([nameOfRuleSet, rules]) => (
       <div className={className} ><button onClick={() => setAndResetTable(rules)}>{nameOfRuleSet}</button></div>

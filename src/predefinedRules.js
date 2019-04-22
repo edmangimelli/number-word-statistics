@@ -1,48 +1,55 @@
 const notMultipliers = false;
 
-const objectToRules = (obj, multiplier = true) => Object.entries(obj).map(
-  ([word, value]) => ({ word, value, multiplier })
-);
+const objectToRules = (obj, multiplier = true) =>
+  Object.entries(obj).map(([word, value]) => ({ word, value, multiplier }));
 
-const powersOfTen = obj => Object.entries(obj).reduce(
-  (newObj, [k, v]) => ({...newObj, [k]: Math.pow(10, v)}), {} 
-);
+const powersOfTen = obj =>
+  Object.entries(obj).reduce(
+    (newObj, [k, v]) => ({ ...newObj, [k]: Math.pow(10, v) }),
+    {}
+  );
 
-const common = objectToRules({
-  one: 1,
-  two: 2,
-  three: 3,
-  four: 4,
-  five: 5,
-  six: 6,
-  seven: 7,
-  eight: 8,
-  nine: 9,
-  ten: 10,
-  eleven: 11,
-  twelve: 12,
-  thirteen: 13,
-  fourteen: 14,
-  fifteen: 15,
-  sixteen: 16,
-  seventeen: 17,
-  eighteen: 18,
-  nineteen: 19,
-  twenty: 20,
-  thirty: 30,
-  forty: 40,
-  fifty: 50,
-  sixty: 60,
-  seventy: 70,
-  eighty: 80,
-  ninety: 90,
-}, notMultipliers).concat(objectToRules({
-  hundred: 100,
-  thousand: 1000,
-}));
+const common = objectToRules(
+  {
+    zero: 0,
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+    ten: 10,
+    eleven: 11,
+    twelve: 12,
+    thirteen: 13,
+    fourteen: 14,
+    fifteen: 15,
+    sixteen: 16,
+    seventeen: 17,
+    eighteen: 18,
+    nineteen: 19,
+    twenty: 20,
+    thirty: 30,
+    forty: 40,
+    fifty: 50,
+    sixty: 60,
+    seventy: 70,
+    eighty: 80,
+    ninety: 90,
+  },
+  notMultipliers
+).concat(
+  objectToRules({
+    hundred: 100,
+    thousand: 1000,
+  })
+);
 
 const rules = Object.entries({
-  'short scale (US)': {
+  "Short Scale (US, Eastern Europe, English Canadian, Australian, and modern British)": {
     million: 6,
     billion: 9,
     trillion: 12,
@@ -67,7 +74,7 @@ const rules = Object.entries({
     centillion: 303,
     */
   },
-  'long scale': {
+  "Long Scale (Western, Central Europe, older British, and French Canadian)": {
     million: 6,
     milliard: 9,
     billion: 12,
@@ -168,15 +175,87 @@ const rules = Object.entries({
 }).reduce(
   (newObj, [nameOfRuleSet, obj]) => ({
     ...newObj,
-    [nameOfRuleSet]: common.concat(objectToRules(powersOfTen(obj)))
+    [nameOfRuleSet]: common.concat(objectToRules(powersOfTen(obj))),
   }),
   {}
 );
 
-rules['super tiny set'] = objectToRules({
-  one: 1,
-  two: 2,
-  three: 3,
-}, notMultipliers);
+rules["Roman Numerals"] = objectToRules(
+  {
+    " ": 0,
+    I: 1,
+    V: 5,
+    X: 10,
+    L: 50,
+    C: 100,
+    D: 500,
+    M: 1000,
+  },
+  notMultipliers
+);
+
+rules["Modern Roman Numerals"] = rules["Roman Numerals"].concat(
+  objectToRules(
+    {
+      IV: 4,
+      IX: 9,
+      XL: 40,
+      XC: 90,
+      CD: 400,
+      CM: 900,
+    },
+    notMultipliers
+  )
+);
+
+rules["Tally Marks (pretty)"] = objectToRules(
+  {
+    " ": 0,
+    "𝍩": 1,
+    "𝍪": 2,
+    "𝍫": 3,
+    "𝍬": 4,
+    卌: 5,
+  },
+  notMultipliers
+);
+
+rules["Tally Marks (simple)"] = objectToRules(
+  {
+    " ": 0,
+    I: 1,
+    V: 5,
+  },
+  notMultipliers
+);
+
+rules["Power of 2ish (made-up)"] = objectToRules(
+  {
+    O: 0,
+    ".": 1,
+    "-": 2,
+    "=": 4,
+    "#": 8,
+    S: 16,
+    $: 32,
+    a: 64,
+    "@": 128,
+    v: 256,
+    w: 512,
+  },
+  notMultipliers
+).concat(
+  objectToRules({
+    "x ": 1024,
+  })
+);
+
+rules["Simplest (Unary)"] = objectToRules(
+  {
+    0: 0,
+    1: 1,
+  },
+  notMultipliers
+);
 
 export default rules;

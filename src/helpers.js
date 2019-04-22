@@ -1,4 +1,4 @@
-import predefinedRules from "./rules";
+import predefinedRules from "./predefinedRules";
 
 export const isNumber = x =>
   typeof x === "number" && !Number.isNaN(x) && Number.isFinite(x);
@@ -19,7 +19,7 @@ export const stringToNumber = str => {
 export const numberToString = number => {
   // return [string, OK]
   if (!isNumber(number)) return ["", false];
-  if (number > 9999 &&  remove('0', String(number)).length === 1)
+  if (number > 9999 && remove("0", String(number)).length === 1)
     return [remove("+", number.toExponential()), true];
   return [number.toLocaleString(), true];
 };
@@ -118,4 +118,87 @@ const biggestValueLessThanOriginalNumber = (number, values) =>
 
 const isMultiplier = (number, multipliers) => multipliers.indexOf(number) > -1;
 
-export const rangeInclusive = (a, b) => [...Array(b-a+1).keys()].map(n => n+a);
+export const rangeInclusive = (a, b) =>
+  [...Array(b - a + 1).keys()].map(n => n + a);
+
+export const warningsAndErrorsForRuleSet = rules => {
+  const errors = [];
+  const err = string => errors.push(string);
+
+  const aRuleSet = (___, { haveARuleWhereMultiplierIs: mult, andValueIs: v }) =>
+    err(
+      [
+        `A rule set ${___} have a rule that has "value" = ${v}`,
+        `and "multiplier" ${mult ? "" : "un"}checked (${mult}).`,
+      ].join(" ")
+    );
+
+  [0, 1].forEach(n => {
+    if (!rules.find(r => r.value === n && !r.multiplier))
+      aRuleSet("must", { haveARuleWhereMultiplierIs: false, andValueIs: n });
+    if (rules.find(r => r.value === n && r.multiplier))
+      aRuleSet("cannot", { haveARuleWhereMultiplierIs: true, andValueIs: n });
+  });
+
+  const rulesWithNonNumberValues = rules.filter(r => !isNumber(r.value));
+  const rulesWithoutWords = rules.filter(r => !r.word);
+
+  [
+    [rulesWithNonNumberValues, "have non-number values"],
+    [rulesWithoutWords, "don't have words"],
+  ].forEach(([rules, ___]) => {
+    if (rules.length > 0)
+      err(
+        `These rules ${___}: ${rules.map(r => objectToString(r)).join(", ")}`
+      );
+  });
+
+  const warnings = [];
+  const warn = string => warnings.push(string);
+
+  const [repeatedValues, repeatedWords] = ["value", "word"].map(k =>
+    repeats(rules.map(r => r[k]))
+  );
+
+  [[repeatedValues, "value"], [repeatedWords, "word"]].forEach(
+    ([repeats, ___]) => {
+      const numberOfRepeats = repeats.length;
+      if (numberOfRepeats === 0) return;
+      const multipleRepeats = numberOfRepeats > 1;
+      const list = (() => {
+        const string = objectToString(repeats);
+        return multipleRepeats ? string : string.slice(1, -1);
+      })();
+      const [These, s, are] = multipleRepeats
+        ? ["These", "s", "are"]
+        : ["This", "", "is"];
+      warn(
+        [
+          `${These} ${___}${s} ${are} repeated in your rule set: ${list}.`,
+          "This will likely produce undesired effects.",
+        ].join(" ")
+      );
+    }
+  );
+
+  return { warnings, errors };
+};
+
+const objectToString = obj =>
+  JSON.stringify(obj)
+    .replace(/"/g, "")
+    .replace(/:|,/g, "$& ");
+
+const repeats = array => {
+  const counts = array.reduce((counts, v) => {
+    if (!counts[v]) counts[v] = 0;
+    counts[v]++;
+    return counts;
+  }, {});
+
+  const result = Object.entries(counts)
+    .filter(([k, v]) => v > 1)
+    .map(([k]) => k);
+
+  return array.every(a => isNumber(a)) ? result.map(r => Number(r)) : result;
+};

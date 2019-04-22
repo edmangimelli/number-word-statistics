@@ -1,24 +1,26 @@
-import React, { Component, createRef } from "react";
-import "./Main.css";
+import React, { Component } from "react";
 import Rules from "./components/Rules";
 import Bracket from "./components/Bracket";
-import NumberInput from "./components/NumberInput";
+import ControlledNumberInput from "./components/ControlledNumberInput";
 import Calculations from "./components/Calculations";
 import SetDelimiters from "./components/SetDelimiters";
-import { isNumber } from "./helpers";
-import predefinedRules from "./rules";
+import { isNumber, warningsAndErrorsForRuleSet } from "./helpers";
+import predefinedRules from "./predefinedRules";
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     const {
-      left = "",
-      right = "",
+      left = 1,
+      right = 123,
       includeLeft = false,
       includeRight = false,
       showRules = null,
-      rules = predefinedRules["short scale (US)"],
+      showDelimiters = null,
+      rules = predefinedRules[
+        "Short Scale (US, Eastern Europe, English Canadian, Australian, and modern British)"
+      ],
       innerDelimiter = "",
       outerDelimiter = "",
     } = props;
@@ -29,6 +31,7 @@ class App extends Component {
       includeLeft,
       includeRight,
       showRules,
+      showDelimiters,
       rules,
       innerDelimiter,
       outerDelimiter,
@@ -56,7 +59,7 @@ class App extends Component {
     return [min - 1, max + 1, OK];
   };
 
-  rules = () => {
+  rules = ({ warnings, errors }) => {
     const { rules, showRules } = this.state;
     return (
       <Rules
@@ -69,6 +72,8 @@ class App extends Component {
         rules={rules}
         show={showRules}
         toggle={() => this.setState({ showRules: !showRules || null })}
+        warnings={warnings}
+        errors={errors}
       />
     );
   };
@@ -92,7 +97,10 @@ class App extends Component {
     });
 
     const [LeftInput, RightInput] = ["left", "right"].map(k => (
-      <NumberInput set={v => this.setState({ [k]: v })} name={k} />
+      <ControlledNumberInput
+        set={v => this.setState({ [k]: v })}
+        value={this.state[k]}
+      />
     ));
 
     return (
@@ -108,14 +116,23 @@ class App extends Component {
     const format = n => n.toLocaleString();
     const [formattedMin, formattedMax] = [min, max].map(format);
     return (
-      <div>
-        between {formattedMin} and {formattedMax}
+      <div style={{ marginBottom: "20px" }}>
+        between {formattedMin} and {formattedMax}{" "}
+        <span className="note">
+          (strictly between; {formattedMin} to {formattedMax} excluding{" "}
+          {formattedMin} and {formattedMax})
+        </span>
       </div>
     );
   };
 
-  setDelimiters = () => {
-    const { innerDelimiter: inner, outerDelimiter: outer, rules } = this.state;
+  setDelimiters = ({ errors }) => {
+    const {
+      innerDelimiter: inner,
+      outerDelimiter: outer,
+      rules,
+      showDelimiters,
+    } = this.state;
     return (
       <SetDelimiters
         {...{
@@ -124,16 +141,32 @@ class App extends Component {
           setInner: innerDelimiter => this.setState({ innerDelimiter }),
           setOuter: outerDelimiter => this.setState({ outerDelimiter }),
           rules,
+          errors,
+          show: showDelimiters,
+          toggle: () =>
+            this.setState({ showDelimiters: !showDelimiters || null }),
         }}
       />
     );
   };
 
-  calculations = () => {
-    const { rules } = this.state;
+  calculations = ({ warnings, errors }) => {
+    const { rules, innerDelimiter, outerDelimiter } = this.state;
     const [min, max, OK] = this.inclusiveMinMax();
     if (!OK) return null;
-    return <Calculations {...{ min, max, rules }} />;
+    return (
+      <Calculations
+        {...{
+          min,
+          max,
+          rules,
+          innerDelimiter,
+          outerDelimiter,
+          warnings,
+          errors,
+        }}
+      />
+    );
   };
 
   render() {
@@ -145,13 +178,14 @@ class App extends Component {
       setDelimiters,
       calculations,
     } = this;
+    const warningsAndErrors = warningsAndErrorsForRuleSet(this.state.rules);
     return (
       <div>
-        {rules()}
+        {rules(warningsAndErrors)}
+        {setDelimiters(warningsAndErrors)}
         {range()}
         {rangeDescription()}
-        {setDelimiters()}
-        {calculations()}
+        {calculations(warningsAndErrors)}
       </div>
     );
   }
