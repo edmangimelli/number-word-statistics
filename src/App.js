@@ -51,7 +51,12 @@ class App extends Component {
         ? [left, right, includeLeft, includeRight]
         : [right, left, includeRight, includeLeft];
 
-    return [min + (includeMin ? 0 : 1), max - (includeMax ? 0 : 1), true];
+    const includedMin = min + (includeMin ? 0 : 1);
+    const includedMax = max - (includeMax ? 0 : 1);
+
+    if (includedMin > includedMax) return [null, null, null];
+
+    return [includedMin, includedMax, true];
   };
 
   exclusiveMinMax = () => {
@@ -114,7 +119,13 @@ class App extends Component {
 
   rangeDescription = () => {
     const [min, max, OK] = this.exclusiveMinMax();
-    if (!OK) return null;
+    if (!OK)
+      return (
+        <div className="note" style={{ marginBottom: "20px" }}>
+          (invalid range)
+        </div>
+      );
+
     const format = n => n.toLocaleString();
     const [formattedMin, formattedMax] = [min, max].map(format);
     return (
