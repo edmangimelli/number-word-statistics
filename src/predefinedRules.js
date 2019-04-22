@@ -246,7 +246,7 @@ rules["Power of 2ish (made-up)"] = objectToRules(
   notMultipliers
 ).concat(
   objectToRules({
-    "x ": 1024,
+    x: 1024,
   })
 );
 
