@@ -51,7 +51,7 @@ class Rules extends Component {
     this.setState({ valueString: null }, () => this.setState(defaultState));
   };
 
-  render() {
+  render = () => {
     const {
       set: setRules,
       rules,
