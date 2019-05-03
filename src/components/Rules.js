@@ -140,7 +140,7 @@ class Rules extends Component {
                     />
                   </td>
                   <td>
-                    <Checkbox for={{ multiplier }} set={this.setState} />
+                <Checkbox for={{ multiplier }} set={x => this.setState(x)} />
                   </td>
                   <td>
                     <button onClick={add}>add</button>
